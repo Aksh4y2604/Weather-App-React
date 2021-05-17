@@ -1,38 +1,98 @@
 import react, { useState } from 'react'
+/* MATERIAL-UI IMPORTS */
 import {
   Typography,
-  Button,
-  TextField,
   Grid,
-  InputBase
+  InputBase,
+  AppBar,
+  Toolbar,
+  IconButton,
+  ThemeProvider
 } from '@material-ui/core'
-import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
 
+/* MATERIAL UI ICON IMPORTS */
+import MenuIcon from '@material-ui/icons/Menu'
+import SearchIcon from '@material-ui/icons/Search'
+
+/* MATERIAL UI SYLE IMPORTS  */
+import { makeStyles, fade, createMuiTheme } from '@material-ui/core/styles'
+/* COMPONENT IMPORTS  */
 import DisplayData from './displaydata'
-const styles = {
-  root: {
-    background: 'black',
-    color: 'white'
-  },
-  input: {
-    color: 'white',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    width: '100%'
-  }
-}
+import Clock from 'react-digital-clock'
+import DisplayWeather from './Displaydata2'
+import { theme } from './theme'
 
-function WeatherApp (props) {
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1
+  },
+  menuButton: {
+    marginRight: theme.spacing(2)
+  },
+  title: {
+    flexGrow: 1,
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block'
+    }
+  },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25)
+    },
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(1),
+      width: 'auto'
+    }
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  inputRoot: {
+    color: 'inherit'
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '12ch',
+      '&:focus': {
+        width: '20ch'
+      }
+    }
+  }
+}))
+
+function WeatherApp () {
+  const classes = useStyles()
+
   const [cityName, setCityName] = useState('')
   const handleChange = e => {
     setCityName(e.target.value)
   }
-  const { classes } = props
+  var today = new Date()
+  var date =
+    today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+  var time = today.getHours() + ':' + today.getMinutes()
 
   const [data, setData] = useState({})
-  const submitHandler = () => {
+  const submitHandler = e => {
+    e.preventDefault()
+
     console.log(cityName)
 
     fetch(
@@ -45,39 +105,67 @@ function WeatherApp (props) {
         setData(result)
         setCityName('')
       })
+    return false
   }
 
   return (
-    <div>
-      <Grid container alignItems='center' spacing={2}>
-        <Grid item xs={12} className='gridItem'>
-          <Typography variant='h2' component='h2'>
-            Weather App
-          </Typography>
-        </Grid>
-        <Grid item xs={12} className='gridItem'>
-          <TextField
-            className={classes.textField}
-            autoFocus
-            id='outlined-basic'
-            placeholder='City'
-            InputProps={{
-              className: classes.input
-            }}
-            value={cityName}
-            onChange={e => handleChange(e)}
-          ></TextField>
-        </Grid>
-        <Grid item xs={12} className='gridItem'>
-          <Button color='primary' variant='contained' onClick={submitHandler}>
-            Search
-          </Button>
-        </Grid>
-        <Grid item xs={12}>
-          <DisplayData data={data}></DisplayData>
-        </Grid>
-      </Grid>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div>
+        {/* APP BAR */}
+        <div className={classes.root}>
+          <AppBar position='static'>
+            <Toolbar>
+              <IconButton
+                edge='start'
+                className={classes.menuButton}
+                color='inherit'
+                aria-label='open drawer'
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography className={classes.title} variant='h6' noWrap>
+                Weather App
+              </Typography>
+              <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+                <form onSubmit={e => submitHandler(e)}>
+                  <InputBase
+                    placeholder='Search…'
+                    classes={{
+                      root: classes.inputRoot,
+                      input: classes.inputInput
+                    }}
+                    inputProps={{ 'aria-label': 'search' }}
+                    value={cityName}
+                    onChange={e => handleChange(e)}
+                  />
+                </form>
+              </div>
+            </Toolbar>
+          </AppBar>
+        </div>
+        {/* CLOCK COMPONENT */}
+        <div className='hero-container'>
+          <Grid container spacing={2}>
+            <Grid item xs={6} className='gridItem1'>
+              <Typography variant='h1' component='h1'>
+                <Clock format={'hh-mm'}></Clock>
+              </Typography>
+              <Typography variant='h4' component='h4'>
+                {date}
+              </Typography>
+            </Grid>
+            {/* WEATHER DISPLAY COMPONENT */}
+
+            <Grid item xs={6} className='gridItem2'>
+              <DisplayWeather data={data}></DisplayWeather>
+            </Grid>
+          </Grid>
+        </div>
+      </div>
+    </ThemeProvider>
   )
 }
-export default withStyles(styles)(WeatherApp)
+export default WeatherApp
