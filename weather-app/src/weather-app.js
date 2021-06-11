@@ -113,7 +113,7 @@ function WeatherApp () {
     console.log(cityName)
 
     fetch(
-      `http://api.weatherstack.com/current?access_key=ed31c3b92894f1c99c5b0d4ee9beeb78&query=${cityName}`
+      `https://api.weatherstack.com/current?access_key=ed31c3b92894f1c99c5b0d4ee9beeb78&query=${cityName}`
     )
       .then(res => res.json())
       .then(result => {
