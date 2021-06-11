@@ -1,4 +1,5 @@
 import { Card, createMuiTheme } from "@material-ui/core";
+import { grey, red } from "@material-ui/core/colors";
 
 
 export const theme = createMuiTheme({
@@ -12,7 +13,7 @@ export const theme = createMuiTheme({
         secondary: {
             light: '#ff7961',
             main: '#f44336',
-            dark: '#ba000d',
+            dark: '#616161',
             contrastText: '#000',
         },
     },

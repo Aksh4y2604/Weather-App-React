@@ -7,7 +7,10 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  ThemeProvider
+  ThemeProvider,
+  Card,
+  CardActionArea,
+  CardContent
 } from '@material-ui/core'
 
 /* MATERIAL UI ICON IMPORTS */
@@ -18,7 +21,8 @@ import SearchIcon from '@material-ui/icons/Search'
 import { makeStyles, fade, createMuiTheme } from '@material-ui/core/styles'
 /* COMPONENT IMPORTS  */
 import DisplayData from './displaydata'
-import Clock from 'react-digital-clock'
+import ClockComponent from './Clock'
+
 import DisplayWeather from './Displaydata2'
 import { theme } from './theme'
 
@@ -26,9 +30,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
   },
-  menuButton: {
-    marginRight: theme.spacing(2)
-  },
+  menuButton: {},
   title: {
     flexGrow: 1,
     display: 'none',
@@ -77,8 +79,23 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+const cardStyles = makeStyles(theme => ({
+  root: {
+    maxWidth: 345,
+    backgroundColor: theme.palette.secondary.dark,
+    color: theme.palette.secondary.contrastText,
+    width: '40vw',
+    height: '25vh',
+    alignContent: 'center'
+  },
+  media: {
+    height: 140
+  }
+}))
+
 function WeatherApp () {
   const classes = useStyles()
+  const cardClass = cardStyles()
 
   const [cityName, setCityName] = useState('')
   const handleChange = e => {
@@ -149,17 +166,12 @@ function WeatherApp () {
         {/* CLOCK COMPONENT */}
         <div className='hero-container'>
           <Grid container spacing={2}>
-            <Grid item xs={6} className='gridItem1'>
-              <Typography variant='h1' component='h1'>
-                <Clock format={'hh-mm'}></Clock>
-              </Typography>
-              <Typography variant='h4' component='h4'>
-                {date}
-              </Typography>
+            <Grid item xs={12} sm={6} className='gridItem2'>
+              <ClockComponent data={data}></ClockComponent>
             </Grid>
             {/* WEATHER DISPLAY COMPONENT */}
 
-            <Grid item xs={6} className='gridItem2'>
+            <Grid item xs={12} sm={6} className='gridItem2'>
               <DisplayWeather data={data}></DisplayWeather>
             </Grid>
           </Grid>

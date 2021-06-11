@@ -34,14 +34,14 @@ export default function DisplayWeather ({ background, data }) {
               <Typography variant='h2' component='h2'>
                 {data.current.temperature + '°c'}
               </Typography>
-              <Typography variant='h4' color='textSecondary' component='h3'>
+              <Typography variant='h4' color='textPrimary' component='h3'>
                 {data.location.name}
               </Typography>
-              <Typography variant='h5' color='textSecondary' component='h5'>
+              <Typography variant='h5' color='textPrimary' component='h5'>
                 {data.current.weather_descriptions}
               </Typography>
               <Typography variant='h5' color='textSecondary' component='h5'>
-                Feels Like {data.current.feelslike + '°c'}
+                Feels Like {data.current.feelslike + '°C'}
               </Typography>
               <Typography variant='h5' color='textSecondary' component='h5'>
                 Humidity: {data.current.humidity}
@@ -52,6 +52,21 @@ export default function DisplayWeather ({ background, data }) {
       </div>
     )
   } else {
-    return <div></div>
+    return (
+      <div>
+        <Card className={classes.root}>
+          <CardActionArea>
+            <CardContent>
+              <Typography variant='h2' component='h2'>
+                {'--' + '°c'}
+              </Typography>
+              <Typography variant='h4' color='textSecondary' component='h3'>
+                {'None'}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      </div>
+    )
   }
 }
